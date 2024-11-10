@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>WDME Mining UI</title>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .container { max-width: 600px; margin: 0 auto; padding: 2rem; text-align: center; }
+        input, button { padding: 10px; margin: 10px 0; }
+        button { cursor: pointer; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WDME Mining Interface</h1>
+        
+        <div>
+            <h3>Mine WDME</h3>
+            <input type="text" id="minerAddress" placeholder="Your Wallet Address" required>
+            <input type="text" id="nonce" placeholder="Nonce" required>
+            <button onclick="mine()">Mine</button>
+            <p id="mineResult"></p>
+        </div>
+
+        <div>
+            <h3>Check Balance</h3>
+            <input type="text" id="balanceAddress" placeholder="Your Wallet Address" required>
+            <button onclick="checkBalance()">Check Balance</button>
+            <p id="balanceResult"></p>
+        </div>
+
+        <div>
+            <h3>Withdraw WDME</h3>
+            <input type="text" id="withdrawAddress" placeholder="Your Wallet Address" required>
+            <button onclick="withdraw()">Withdraw</button>
+            <p id="withdrawResult"></p>
+        </div>
+    </div>
+
+    <script>
+        const serverUrl = "http://95.179.212.172:5000";  // Update to your server's URL
+
+        async function mine() {
+            const minerAddress = document.getElementById('minerAddress').value;
+            const nonce = document.getElementById('nonce').value;
+
+            const response = await fetch(`${serverUrl}/mine`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ minerAddress, nonce })
+            });
+            const result = await response.json();
+            document.getElementById('mineResult').innerText = JSON.stringify(result);
+        }
+
+        async function checkBalance() {
+            const address = document.getElementById('balanceAddress').value;
+
+            const response = await fetch(`${serverUrl}/balance/${address}`);
+            const result = await response.json();
+            document.getElementById('balanceResult').innerText = JSON.stringify(result);
+        }
+
+        async function withdraw() {
+            const minerAddress = document.getElementById('withdrawAddress').value;
+
+            const response = await fetch(`${serverUrl}/withdraw`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ minerAddress })
+            });
+            const result = await response.json();
+            document.getElementById('withdrawResult').innerText = JSON.stringify(result);
+        }
+    </script>
+</body>
+</html>
